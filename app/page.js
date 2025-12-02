@@ -1,6 +1,5 @@
 import ChatWidget from './components/chat-widget';
 import { Card, CardContent } from './components/ui/card';
-import { Badge } from './components/ui/badge';
 import { TestInstructions } from './components/test-instructions';
 
 const webhookUrl = process.env.N8N_CHAT_URL ?? '';
@@ -19,18 +18,6 @@ export default function HomePage() {
             Stella is ready for internal validation. Run your Acumatica support flows here and confirm off-topic requests
             are declined before members see it.
           </p>
-
-          <Card className="status-card">
-            <Badge variant={webhookReady ? 'success' : 'info'}>
-              {webhookReady ? 'Webhook connected' : 'Webhook missing'}
-            </Badge>
-            <div>
-              <p className="status-label">{webhookReady ? 'Currently sending to' : 'Next step'}</p>
-              <p className="status-value">
-                {webhookReady ? webhookLabel : 'Set N8N_CHAT_URL in .env.local and restart the dev server.'}
-              </p>
-            </div>
-          </Card>
 
           <div className="checklist">
             <Card className="checklist-card">
