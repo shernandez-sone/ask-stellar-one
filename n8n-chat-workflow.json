@@ -1,0 +1,228 @@
+{
+  "name": "Bank Reconciliation Support Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "bank-recon-demo",
+        "responseMode": "lastNode",
+        "options": {
+          "allowedOrigins": [
+            "http://localhost:3000",
+            "http://localhost:4173",
+            "https://your-production-host.example.com"
+          ]
+        }
+      },
+      "id": "chat_trigger_1",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        400
+      ],
+      "webhookId": "acumatica-support-bot"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a bank reconciliation support assistant for Stellar One Incorporated. Your primary reference is the document \"Bank Reconciliation Walk-Thru.docx\". When responding:\n- Search the documentation using the bank_recon_docs tool before answering\n- Provide step-by-step guidance for reconciliation tasks\n- Surface specific screens, actions, and prerequisite steps when applicable\n- If you cannot find an answer in the doc, state that clearly and avoid guessing\n- Keep responses concise, accurate, and helpful"
+        },
+        "metadata": {
+          "assistantTopic": "bank-reconciliation"
+        }
+      },
+      "id": "ai_agent_2",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        460,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 1500
+        }
+      },
+      "id": "openai_model_3",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        280
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "contextWindowLength": 5
+        }
+      },
+      "id": "memory_4",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [
+        680,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "embeddings_5",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        580
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "source",
+                "value": "bank_reconciliation_docs"
+              },
+              {
+                "name": "company",
+                "value": "Stellar One"
+              },
+              {
+                "name": "document",
+                "value": "Bank Reconciliation Walk-Thru.docx"
+              }
+            ]
+          },
+          "documentSource": "manualUpload"
+        }
+      },
+      "id": "vector_store_6",
+      "name": "In-Memory Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1,
+      "position": [
+        900,
+        480
+      ],
+      "notes": "Prewire: Upload Bank Reconciliation Walk-Thru.docx here once, then execute.\n\nSteps:\n1) Click this node.\n2) In Document section, choose Select/Add File.\n3) Upload docs/Bank Reconciliation Walk-Thru.docx (already in repo path).\n4) Execute workflow once so embeddings are built.\n5) Then activate. The vector tool name is bank_recon_docs."
+    },
+    {
+      "parameters": {
+        "name": "bank_recon_docs",
+        "description": "Search through the Bank Reconciliation Walk-Thru.docx to answer reconciliation questions, prerequisites, and process steps. Use this tool before answering.",
+        "topK": 4
+      },
+      "id": "vector_tool_7",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        680,
+        480
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": []
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "In-Memory Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "In-Memory Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "triggerCount": 0,
+  "active": false
+}
