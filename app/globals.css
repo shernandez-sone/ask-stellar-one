@@ -86,9 +86,15 @@ code {
   margin: 48px auto 64px;
   padding: 0 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: minmax(340px, 460px) minmax(520px, 1fr);
   gap: 24px;
   align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .hero {
@@ -315,7 +321,7 @@ code {
 }
 
 .chat-panel {
-  min-height: 580px;
+  min-height: 700px;
   background: var(--section);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -347,9 +353,53 @@ code {
   font-weight: 700;
 }
 
+.instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.instructions__header h2 {
+  margin-bottom: 6px;
+}
+
+.instructions__lede {
+  margin-top: 8px;
+  font-size: 16px;
+  max-width: 680px;
+}
+
+.instructions__group {
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--border);
+}
+
+.instructions__label {
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 13px;
+}
+
+.instructions__list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: var(--gray);
+  font-size: 16px;
+}
+
 @media (max-width: 640px) {
   .page {
     margin-top: 32px;
+    grid-template-columns: 1fr;
+  }
+
+  .column {
+    order: 2;
   }
 
   .hero,
