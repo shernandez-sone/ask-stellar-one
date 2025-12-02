@@ -54,8 +54,8 @@ export default function HomePage() {
             <p className="eyebrow eyebrow--muted">Live preview</p>
             <h2>Chat widget / iframe</h2>
             <p className="chat-card__lede">
-              Stella styling and the n8n welcome screen make this ready for a member-facing proof of concept. Use it to
-              QA the flows before members see it.
+              Stella styling and the n8n welcome screen are in place. This build is for internal QA—run through the flows
+              here before any members see it.
             </p>
           </div>
           <div className="tag-row" aria-hidden="true">
