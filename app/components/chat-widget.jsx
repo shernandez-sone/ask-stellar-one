@@ -22,7 +22,7 @@ export default function ChatWidget({ webhookUrl }) {
           mode: 'fullscreen',
           showWelcomeScreen: true,
           initialMessages: [
-            'Hey there! Ask me anything about this demo or the workflow behind it.'
+            "Hi, I'm Stella—here to help with your Acumatica support. Ask about your account, setup, or troubleshooting and I'll reply right here."
           ],
           metadata: {
             source: 'n8n-chat-demo',

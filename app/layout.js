@@ -1,8 +1,8 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'n8n Chat Demo',
-  description: 'Drop-in n8n chat widget configured via an env-driven webhook URL.',
+  title: 'Stellar One Chat Preview',
+  description: 'Brand-aligned n8n chat widget and iframe preview for Stellar One members.',
 };
 
 export default function RootLayout({ children }) {
